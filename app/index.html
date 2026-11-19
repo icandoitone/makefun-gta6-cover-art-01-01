@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vice Sunset — GTA 6-style Cover Maker</title>
+<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+<header class="topbar" id="topbar">
+  <div class="brand">
+    <svg class="brand-mark" viewBox="0 0 48 48" aria-hidden="true">
+      <circle cx="24" cy="26" r="11" fill="#ff7a18"/>
+      <rect x="10" y="24" width="28" height="2.5" fill="#14102a"/>
+      <rect x="12" y="29" width="24" height="2.5" fill="#14102a"/>
+      <rect x="15" y="34" width="18" height="2.5" fill="#14102a"/>
+      <path d="M24 4v8M10 12l6 6M38 12l-6 6" stroke="#ff2e88" stroke-width="3" stroke-linecap="round"/>
+    </svg>
+    <div class="brand-text">
+      <h1>VICE SUNSET</h1>
+      <p>GTA 6-style cover maker</p>
+    </div>
+  </div>
+  <div class="top-actions">
+    <div class="seg" role="group" aria-label="Export size">
+      <button type="button" class="seg-btn" data-size="square" aria-pressed="false">1:1</button>
+      <button type="button" class="seg-btn" data-size="portrait" aria-pressed="false">4:5</button>
+      <button type="button" class="seg-btn is-on" data-size="wide" aria-pressed="true">16:9</button>
+    </div>
+    <button type="button" class="btn btn-primary" id="exportBtn">Export PNG</button>
+  </div>
+</header>
+
+<main class="workspace" id="workspace">
+  <aside class="panel" id="panel" aria-label="Cover controls">
+    <section class="ctl" style="--i:0">
+      <h2>Photos</h2>
+      <p class="hint">Upload your own, or use the samples. Photos never leave your machine.</p>
+      <div class="slots">
+        <label class="slot">
+          <span class="slot-thumb" id="thumbA">A</span>
+          <span class="slot-name">Photo 1</span>
+          <input type="file" id="upA" accept="image/*" hidden>
+        </label>
+        <label class="slot">
+          <span class="slot-thumb" id="thumbB">B</span>
+          <span class="slot-name">Photo 2</span>
+          <input type="file" id="upB" accept="image/*" hidden>
+        </label>
+        <label class="slot">
+          <span class="slot-thumb" id="thumbC">C</span>
+          <span class="slot-name">Photo 3</span>
+          <input type="file" id="upC" accept="image/*" hidden>
+        </label>
+      </div>
+      <div class="chips" id="photoChips" aria-label="Assign a photo to the selected panel"></div>
+    </section>
+
+    <section class="ctl" style="--i:1">
+      <h2>Layout</h2>
+      <div class="layouts">
+        <label class="layout-card">
+          <input type="radio" name="layout" value="collage" checked>
+          <span class="layout-glyph" data-layout="collage"></span>
+          <span class="layout-name">Collage</span>
+          <span class="layout-desc">Five panels, big hero</span>
+        </label>
+        <label class="layout-card">
+          <input type="radio" name="layout" value="split">
+          <span class="layout-glyph" data-layout="split"></span>
+          <span class="layout-name">Hero Split</span>
+          <span class="layout-desc">One hero, two stacked</span>
+        </label>
+        <label class="layout-card">
+          <input type="radio" name="layout" value="strips">
+          <span class="layout-glyph" data-layout="strips"></span>
+          <span class="layout-name">Strips</span>
+          <span class="layout-desc">Four tall strips</span>
+        </label>
+      </div>
+    </section>
+
+    <section class="ctl" style="--i:2">
+      <h2>Caption</h2>
+      <label class="field">
+        <span>Title</span>
+        <input type="text" id="capTitle" value="VICE SUNSET" maxlength="24" autocomplete="off">
+      </label>
+      <label class="field">
+        <span>Subtitle</span>
+        <input type="text" id="capSub" value="A NIGHT IN LEONIDA" maxlength="48" autocomplete="off">
+      </label>
+      <label class="field">
+        <span>Title theme</span>
+        <select id="capTheme">
+          <option value="sunset" selected>Sunset gradient</option>
+          <option value="neon">Neon pink</option>
+          <option value="white">White</option>
+        </select>
+      </label>
+      <label class="check">
+        <input type="checkbox" id="capHalftone" checked>
+        <span>Halftone dots on panels</span>
+      </label>
+    </section>
+
+    <section class="ctl" style="--i:3">
+      <h2 id="panelHeading">Selected panel</h2>
+      <div class="grades" id="gradeBtns" role="group" aria-label="Colour grade">
+        <button type="button" class="chip-btn is-on" data-grade="sunset">Sunset</button>
+        <button type="button" class="chip-btn" data-grade="neon">Neon</button>
+        <button type="button" class="chip-btn" data-grade="noir">Noir</button>
+        <button type="button" class="chip-btn" data-grade="original">Original</button>
+      </div>
+      <label class="field">
+        <span>Zoom <output id="zoomOut">1.00×</output></span>
+        <input type="range" id="panelZoom" min="1" max="2.5" step="0.01" value="1">
+      </label>
+      <p class="hint">Drag the preview to pan the selected panel. Scroll to zoom it.</p>
+      <button type="button" class="btn btn-ghost" id="gradeAllBtn">Apply this grade to all panels</button>
+    </section>
+
+    <section class="ctl" style="--i:4">
+      <h2>Export</h2>
+      <div class="sizes">
+        <label class="size-row"><input type="radio" name="size" value="square"><span>1080 × 1080 <em>square post</em></span></label>
+        <label class="size-row"><input type="radio" name="size" value="portrait"><span>1080 × 1350 <em>portrait post</em></span></label>
+        <label class="size-row"><input type="radio" name="size" value="wide" checked><span>1920 × 1080 <em>wide post</em></span></label>
+      </div>
+      <button type="button" class="btn btn-primary btn-block" id="exportBtn2">Export PNG</button>
+      <button type="button" class="btn btn-ghost btn-block" id="previewBtn">Preview cover full-screen</button>
+      <p class="hint">The export is rendered at full size, exactly the pixels you see.</p>
+    </section>
+  </aside>
+
+  <section class="stage" id="stage">
+    <div class="canvas-frame" id="canvasFrame">
+      <canvas id="preview" width="960" height="540" aria-label="Cover preview"></canvas>
+      <div class="frame-tag" id="frameTag">1920 × 1080 · Collage · Sunset</div>
+    </div>
+    <p class="stage-hint">Click a panel to select it · Drag to pan · Scroll to zoom · Esc closes the full-screen preview</p>
+    <pre id="selftest" hidden></pre>
+  </section>
+</main>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script type="module" src="./src/main.js"></script>
+</body>
+</html>
